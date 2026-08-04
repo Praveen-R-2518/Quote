@@ -29,7 +29,7 @@ export function HotelsPanel() {
     return (
       <Card>
         <CardHeader><CardTitle>Hotels</CardTitle></CardHeader>
-        <CardContent><p className="text-sm text-gray-500">Add tour places first to assign hotels.</p></CardContent>
+        <CardContent><p className="text-sm text-stone-500">Add tour places first to assign hotels.</p></CardContent>
       </Card>
     );
   }
@@ -38,14 +38,14 @@ export function HotelsPanel() {
     <Card>
       <CardHeader>
         <CardTitle>Hotels</CardTitle>
-        <p className="text-sm text-gray-500">Select hotels for each tour place</p>
+        <p className="text-sm text-stone-500">Select hotels for each tour place</p>
       </CardHeader>
       <CardContent className="space-y-4">
         <Button type="button" variant="outline" onClick={applyHotelSuggestions}>Apply Suggestions</Button>
         {draft.hotels.map((h, i) => {
           const options = getHotelsForLocation(h.location, config?.hotels ?? []);
           return (
-            <div key={i} className="space-y-1 rounded-md bg-gray-50 p-3">
+            <div key={i} className="space-y-2 rounded-2xl bg-orange-50/70 p-4">
               <Label>{h.location} ({h.nights} nights)</Label>
               <Select value={h.hotelId ?? ""} onChange={(e) => updateHotel(i, Number(e.target.value))}>
                 <option value="">Select hotel...</option>

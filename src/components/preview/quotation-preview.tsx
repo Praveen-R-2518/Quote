@@ -46,77 +46,77 @@ export function QuotationPreview() {
 
   return (
     <div className="space-y-6">
-      <div className="flex gap-3 rounded-md border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900" role="alert">
+      <div className="flex gap-3 rounded-2xl border border-orange-100 bg-white/80 p-4 text-sm text-stone-700 shadow-sm" role="alert">
         <Info className="mt-0.5 h-4 w-4 shrink-0" />
         <div>
           <strong>Word export</strong> uses your official company template (logo, colours, layout).
-          <strong> PDF export</strong> generates a matching quotation document with inclusions and exclusions included.
+          <strong> PDF export</strong> mirrors the same quotation content and header branding. Add your logo image at public/brand/pumpkin-logo.png to include it in PDF exports.
         </div>
       </div>
 
       <Card>
         <CardHeader>
           <CardTitle>Quotation data review</CardTitle>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-stone-500">
             Review the data below before exporting.
           </p>
         </CardHeader>
         <CardContent className="space-y-4 text-sm">
-          <dl className="grid gap-3 sm:grid-cols-2">
+          <dl className="review-grid grid gap-3 sm:grid-cols-2">
             <div>
-              <dt className="font-medium text-gray-500">Duration</dt>
+              <dt className="font-medium text-stone-500">Duration</dt>
               <dd>{draft.nights}N {draft.days}D</dd>
             </div>
             <div>
-              <dt className="font-medium text-gray-500">Quotation date</dt>
+              <dt className="font-medium text-stone-500">Quotation date</dt>
               <dd>{draft.quotationDate}</dd>
             </div>
             <div>
-              <dt className="font-medium text-gray-500">Expiration date</dt>
+              <dt className="font-medium text-stone-500">Expiration date</dt>
               <dd>{draft.expirationDate}</dd>
             </div>
             <div>
-              <dt className="font-medium text-gray-500">Customer</dt>
+              <dt className="font-medium text-stone-500">Customer</dt>
               <dd>{draft.customerName || "—"}</dd>
             </div>
             <div>
-              <dt className="font-medium text-gray-500">Places</dt>
+              <dt className="font-medium text-stone-500">Places</dt>
               <dd>
                 {draft.stayingLocations.map((s) => `${s.location} (${s.nights}N)`).join(" / ") ||
                   "—"}
               </dd>
             </div>
             <div>
-              <dt className="font-medium text-gray-500">PAX (paying)</dt>
+              <dt className="font-medium text-stone-500">PAX (paying)</dt>
               <dd>{payingPax}</dd>
             </div>
             <div>
-              <dt className="font-medium text-gray-500">Rooms</dt>
+              <dt className="font-medium text-stone-500">Rooms</dt>
               <dd>{roomsDescription || roomsQty || "—"}</dd>
             </div>
             <div>
-              <dt className="font-medium text-gray-500">Transportation</dt>
+              <dt className="font-medium text-stone-500">Transportation</dt>
               <dd>{transportDescription || "—"}</dd>
             </div>
             <div>
-              <dt className="font-medium text-gray-500">Meals</dt>
+              <dt className="font-medium text-stone-500">Meals</dt>
               <dd>
                 {draft.meals.breakfasts} breakfast, {draft.meals.lunches} lunch, {draft.meals.dinners} dinner
                 {draft.meals.dinners !== 1 ? "s" : ""}
               </dd>
             </div>
             <div className="sm:col-span-2">
-              <dt className="font-medium text-gray-500">Description</dt>
+              <dt className="font-medium text-stone-500">Description</dt>
               <dd>{draft.packageDescription}</dd>
             </div>
             <div>
-              <dt className="font-medium text-gray-500">Per person</dt>
+              <dt className="font-medium text-stone-500">Per person</dt>
               <dd>
                 {formatCurrency(draft.pricePerPerson, draft.currencyCode, currency?.locale, currency?.symbol)}
               </dd>
             </div>
             <div>
-              <dt className="font-medium text-gray-500">Total</dt>
+              <dt className="font-medium text-stone-500">Total</dt>
               <dd>
                 {formatCurrency(totalPrice, draft.currencyCode, currency?.locale, currency?.symbol)}
               </dd>
@@ -126,9 +126,9 @@ export function QuotationPreview() {
           {draft.tourPlan.length > 0 && (
             <div>
               <p className="mb-2 font-medium">Tour plan (max 4 days in Word template)</p>
-              <div className="overflow-x-auto rounded-md border">
+              <div className="overflow-x-auto rounded-2xl border border-orange-100 bg-white/70">
                 <table className="min-w-full text-xs">
-                  <thead className="bg-gray-100">
+                  <thead className="bg-orange-100/80">
                     <tr>
                       <th className="px-2 py-1 text-left">DAY</th>
                       <th className="px-2 py-1 text-left">FROM</th>
@@ -179,7 +179,7 @@ export function QuotationPreview() {
         </CardContent>
       </Card>
 
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-wrap gap-3 rounded-2xl border border-orange-100 bg-white/85 p-3 shadow-sm">
         <Button onClick={() => handleExport("docx")} disabled={!!exporting}>
           <FileText className="mr-2 h-4 w-4" />
           {exporting === "docx" ? "Exporting..." : "Export Word"}

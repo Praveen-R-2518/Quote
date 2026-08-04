@@ -6,6 +6,8 @@ import type { ExportDocumentData } from "./build-doc-data";
 /** Original Pumpkin Tours template — never modify structure, styles, logo, or fixed labels. */
 const TEMPLATE_PATH = path.join(process.cwd(), "templates", "quotation-template-source.docx");
 
+type ParagraphMatch = { xml: string; index: number };
+
 function escapeXml(text: string): string {
   return text
     .replace(/&/g, "&amp;")
@@ -39,6 +41,31 @@ function splitDate(dateStr: string): [string, string, string] {
     return [`${parts[0]}.${parts[1]}`, `.${year.slice(0, 3)}`, year.slice(3) || year.slice(-1)];
   }
   return [dateStr, "", ""];
+}
+
+function findParagraphs(xml: string): ParagraphMatch[] {
+  const results: ParagraphMatch[] = [];
+  const regex = /<w:p[\s>][\s\S]*?<\/w:p>/g;
+  let match: RegExpExecArray | null;
+  while ((match = regex.exec(xml)) !== null) {
+    results.push({ xml: match[0], index: match.index });
+  }
+  return results;
+}
+
+function isListParagraph(paraXml: string): boolean {
+  return paraXml.includes('w:val="ListParagraph"') || paraXml.includes("<w:numPr>");
+}
+
+function setParagraphText(paraXml: string, text: string): string {
+  let first = true;
+  return paraXml.replace(/<w:t([^>]*)>[^<]*<\/w:t>/g, (_match, attrs: string) => {
+    if (first) {
+      first = false;
+      return `<w:t${attrs}>${escapeXml(text)}</w:t>`;
+    }
+    return `<w:t${attrs}></w:t>`;
+  });
 }
 
 /** Sample duration "3N 4D" split across w:t indices 12–15 and 18–21. */
@@ -88,42 +115,76 @@ function fillTourPlanRows(xml: string, rows: ExportDocumentData["tourPlanRows"])
   return result;
 }
 
-/** Sample inclusion lines at indices 89–92 — replace in place only. */
-function fillInclusions(xml: string, inclusions: string[]): string {
+/**
+ * Fill inclusion list items in place and append exclusions as plain list paragraphs
+ * before the footer. Uses paragraph structure from the template — never clones
+ * from the document start (which would duplicate tables).
+ */
+function fillInclusionsAndExclusions(
+  xml: string,
+  inclusions: string[],
+  exclusions: string[]
+): string {
+  const paragraphs = findParagraphs(xml);
+  const headingIdx = paragraphs.findIndex((p) => p.xml.includes("Entry Tickets Included:"));
+  const footerIdx = paragraphs.findIndex((p) => p.xml.includes("Please feel free to reach out"));
+  if (headingIdx === -1 || footerIdx === -1) {
+    return fillInclusionsByIndex(xml, inclusions);
+  }
+
+  const sectionParagraphs = paragraphs.slice(headingIdx + 1, footerIdx);
+  const listParagraphs = sectionParagraphs.filter((p) => isListParagraph(p.xml));
+  const listTemplate =
+    listParagraphs.find((p) => p.xml.includes("Hanuman temple")) ??
+    listParagraphs.find((p) => p.xml.includes("<w:t")) ??
+    listParagraphs[0];
+
+  if (!listTemplate) return fillInclusionsByIndex(xml, inclusions);
+
+  let result = xml;
+
+  for (let i = 0; i < listParagraphs.length; i++) {
+    result = result.replace(
+      listParagraphs[i].xml,
+      setParagraphText(listParagraphs[i].xml, inclusions[i]?.trim() ?? "")
+    );
+  }
+
+  let insertBlock = "";
+
+  const extraInclusions = inclusions.map((item) => item.trim()).filter(Boolean).slice(listParagraphs.length);
+  if (extraInclusions.length > 0) {
+    insertBlock += extraInclusions
+      .map((item) => setParagraphText(listTemplate.xml, item))
+      .join("");
+  }
+
+  const exclusionItems = exclusions.map((item) => item.trim()).filter(Boolean);
+  if (exclusionItems.length > 0) {
+    insertBlock += setParagraphText(paragraphs[headingIdx].xml, "Exclusions:");
+    insertBlock += exclusionItems
+      .map((item) => setParagraphText(listTemplate.xml, item))
+      .join("");
+  }
+
+  if (insertBlock) {
+    const footerPara = paragraphs[footerIdx].xml;
+    const insertAt = result.indexOf(footerPara);
+    if (insertAt !== -1) {
+      result = result.slice(0, insertAt) + insertBlock + result.slice(insertAt);
+    }
+  }
+
+  return result;
+}
+
+/** Fallback when paragraph markers cannot be found. */
+function fillInclusionsByIndex(xml: string, inclusions: string[]): string {
   let result = xml;
   for (let i = 0; i < 4; i++) {
     result = setTextAtIndex(result, 89 + i, inclusions[i] ?? "");
   }
   return result;
-}
-
-function setParagraphText(paraXml: string, text: string): string {
-  let first = true;
-  return paraXml.replace(/<w:t([^>]*)>[^<]*<\/w:t>/g, (_match, attrs: string) => {
-    if (first) {
-      first = false;
-      return `<w:t${attrs}>${escapeXml(text)}</w:t>`;
-    }
-    return `<w:t${attrs}></w:t>`;
-  });
-}
-
-/** Insert exclusions section before footer, cloning inclusion paragraph styles from template. */
-function insertExclusionsSection(xml: string, exclusions: string[]): string {
-  const items = exclusions.map((e) => e.trim()).filter(Boolean);
-  if (items.length === 0) return xml;
-
-  const footerPara = xml.match(/<w:p[^>]*>[\s\S]*?Please feel free to reach out[\s\S]*?<\/w:p>/);
-  const headingPara = xml.match(/<w:p[^>]*>[\s\S]*?Entry Tickets Included:[\s\S]*?<\/w:p>/);
-  const itemPara = xml.match(/<w:p[^>]*>[\s\S]*?Hanuman temple[\s\S]*?<\/w:p>/);
-
-  if (!footerPara || !headingPara || !itemPara) return xml;
-
-  const heading = setParagraphText(headingPara[0], "Exclusions:");
-  const lines = items.map((item) => setParagraphText(itemPara[0], item)).join("");
-  const insertAt = xml.indexOf(footerPara[0]);
-
-  return xml.slice(0, insertAt) + heading + lines + xml.slice(insertAt);
 }
 
 /**
@@ -170,7 +231,6 @@ function fillSummaryTable(xml: string, data: ExportDocumentData): string {
   const tables = xml.match(/<w:tbl>[\s\S]*?<\/w:tbl>/g);
   if (!tables || tables.length === 0) return xml;
 
-  // QTY | TRANSPORTATION | ROOMS | DESCRIPTION | PER PERSON (INR) | TOTAL (INR)
   const summaryTable = tables.find(
     (t) => t.includes("QTY") && t.includes("TRANSPORTATION") && t.includes("PER PERSON")
   );
@@ -202,14 +262,12 @@ export async function fillQuotationTemplate(data: ExportDocumentData): Promise<B
 
   const zip = new PizZip(fs.readFileSync(TEMPLATE_PATH));
 
-  // Preserve all parts unchanged except document body text
   let xml = zip.file("word/document.xml")!.asText();
 
   xml = fillDuration(xml, data.nights, data.days);
   xml = fillDates(xml, data.quotationDate, data.expirationDate);
   xml = fillTourPlanRows(xml, data.tourPlanRows.slice(0, 4));
-  xml = fillInclusions(xml, data.inclusions);
-  xml = insertExclusionsSection(xml, data.exclusions);
+  xml = fillInclusionsAndExclusions(xml, data.inclusions, data.exclusions);
   xml = fillSummaryTable(xml, data);
 
   zip.file("word/document.xml", xml);

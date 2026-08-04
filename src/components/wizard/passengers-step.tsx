@@ -45,7 +45,7 @@ export function PassengersStep() {
             FOCs require transport
           </label>
         </div>
-        <div className="mt-4 text-sm text-gray-600">
+        <div className="mt-4 rounded-2xl bg-orange-50/70 px-4 py-3 text-sm text-stone-600">
           Paying passengers: {payingPassengers(p)} | Total travellers: {totalPassengers(p)} | Beds needed: {guestsNeedingBeds(p)} | Transport seats: {travellersNeedingTransport(p)}
         </div>
       </CardContent>

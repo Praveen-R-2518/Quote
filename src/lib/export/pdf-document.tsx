@@ -1,15 +1,27 @@
 import React from "react";
-import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
+import { Document, Page, Text, View, Image, StyleSheet } from "@react-pdf/renderer";
 import type { ExportDocumentData } from "./build-doc-data";
 
 const styles = StyleSheet.create({
-  page: { padding: 36, fontSize: 9, fontFamily: "Helvetica" },
-  header: { marginBottom: 12, textAlign: "center" },
-  companyName: { fontSize: 16, fontWeight: "bold", marginBottom: 2 },
-  title: { fontSize: 13, fontWeight: "bold", marginBottom: 4 },
-  duration: { fontSize: 11, marginBottom: 2 },
-  address: { fontSize: 9, color: "#333" },
-  metaRow: { flexDirection: "row", justifyContent: "space-between", marginTop: 8, marginBottom: 10, fontSize: 9 },
+  page: { padding: 36, fontSize: 9, fontFamily: "Helvetica", color: "#1a1a1a" },
+  topRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 },
+  brandBlock: { flexDirection: "row", alignItems: "center", gap: 8, maxWidth: "62%" },
+  logo: { width: 52, height: 52, objectFit: "contain" },
+  companyName: { fontSize: 16, fontWeight: "bold", color: "#ea580c" },
+  durationBox: {
+    border: "1 solid #f97316",
+    borderRadius: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    fontSize: 12,
+    fontWeight: "bold",
+    color: "#c2410c",
+  },
+  title: { fontSize: 14, fontWeight: "bold", textAlign: "center", marginBottom: 8, letterSpacing: 0.5 },
+  infoRow: { flexDirection: "row", justifyContent: "space-between", marginBottom: 10, fontSize: 9 },
+  addressBlock: { maxWidth: "55%" },
+  datesBlock: { textAlign: "right" },
+  metaRow: { flexDirection: "row", justifyContent: "space-between", marginBottom: 10, fontSize: 9 },
   table: { marginTop: 8, marginBottom: 10, border: "1 solid #ccc" },
   tableRow: { flexDirection: "row", borderBottom: "1 solid #ddd" },
   tableHeader: { backgroundColor: "#ffe599", fontWeight: "bold" },
@@ -85,21 +97,35 @@ function ListSection({ title, items }: { title: string; items: string[] }) {
   );
 }
 
-export function QuotationPdfDocument({ data }: { data: ExportDocumentData }) {
+export function QuotationPdfDocument({
+  data,
+  logoPath,
+}: {
+  data: ExportDocumentData;
+  logoPath?: string | null;
+}) {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        <View style={styles.header}>
-          <Text style={styles.companyName}>{data.companyName}</Text>
-          <Text style={styles.duration}>{data.durationLabel}</Text>
-          <Text style={styles.title}>{data.title}</Text>
-          {data.companyAddress ? <Text style={styles.address}>{data.companyAddress}</Text> : null}
+        <View style={styles.topRow}>
+          <View style={styles.brandBlock}>
+            {logoPath ? <Image src={logoPath} style={styles.logo} /> : null}
+            <Text style={styles.companyName}>{data.companyName}</Text>
+          </View>
+          <Text style={styles.durationBox}>{data.durationLabel}</Text>
         </View>
 
-        <View style={styles.metaRow}>
-          <Text>Date: {data.quotationDate}</Text>
-          <Text>{data.companyPhone}</Text>
-          <Text>Expiration: {data.expirationDate}</Text>
+        <Text style={styles.title}>{data.title}</Text>
+
+        <View style={styles.infoRow}>
+          <View style={styles.addressBlock}>
+            {data.companyAddress ? <Text>{data.companyAddress}</Text> : null}
+            {data.companyPhone ? <Text>{data.companyPhone}</Text> : null}
+          </View>
+          <View style={styles.datesBlock}>
+            <Text>Date :- {data.quotationDate}</Text>
+            <Text>Expiration Date :- {data.expirationDate}</Text>
+          </View>
         </View>
 
         <SummaryTable data={data} />

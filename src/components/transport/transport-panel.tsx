@@ -45,7 +45,7 @@ export function TransportPanel() {
     <Card>
       <CardHeader>
         <CardTitle>Transport</CardTitle>
-        <p className="text-sm text-gray-500">Total passengers: {total}</p>
+        <p className="text-sm text-stone-500">Total passengers: {total}</p>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex gap-2">
@@ -53,9 +53,9 @@ export function TransportPanel() {
           <Button type="button" variant="outline" onClick={addVehicle}><Plus className="mr-1 h-4 w-4" />Add Vehicle</Button>
         </div>
         {draft.transport.map((t, i) => (
-          <div key={i} className="flex items-center gap-3 rounded-md bg-gray-50 p-3">
+          <div key={i} className="flex items-center gap-3 rounded-2xl bg-orange-50/70 p-3">
             <select
-              className="flex-1 rounded-md border border-gray-300 px-2 py-1.5 text-sm"
+              className="flex-1 rounded-2xl border border-orange-100 bg-white/80 px-3 py-2 text-sm outline-none transition focus:border-orange-300 focus:ring-4 focus:ring-orange-200/70"
               value={t.vehicleId}
               onChange={(e) => updateItem(i, Number(e.target.value), t.count)}
             >
@@ -64,10 +64,10 @@ export function TransportPanel() {
               ))}
             </select>
             <Input type="number" min={1} className="w-20" value={t.count} onChange={(e) => updateItem(i, t.vehicleId, Number(e.target.value) || 1)} />
-            <button type="button" onClick={() => removeVehicle(i)} className="text-gray-400 hover:text-red-500"><Trash2 className="h-4 w-4" /></button>
+            <button type="button" onClick={() => removeVehicle(i)} className="text-stone-400 hover:text-red-500"><Trash2 className="h-4 w-4" /></button>
           </div>
         ))}
-        <div className="text-sm text-gray-600">Total transport capacity: {capacity}</div>
+        <div className="text-sm text-stone-600">Total transport capacity: {capacity}</div>
         {capacity < total && draft.transport.length > 0 && (
           <Alert variant="warning">Transport capacity ({capacity}) is less than total passengers ({total}).</Alert>
         )}

@@ -38,7 +38,7 @@ export function RoomAllocationPanel() {
     <Card>
       <CardHeader>
         <CardTitle>Room Allocation</CardTitle>
-        <p className="text-sm text-gray-500">Guests needing beds: {guests}</p>
+        <p className="text-sm text-stone-500">Guests needing beds: {guests}</p>
       </CardHeader>
       <CardContent className="space-y-4">
         <Button type="button" variant="outline" onClick={applyRoomSuggestion}>Apply Suggestion</Button>
@@ -59,7 +59,7 @@ export function RoomAllocationPanel() {
             );
           })}
         </div>
-        <div className="text-sm text-gray-600">
+        <div className="text-sm text-stone-600">
           Total rooms: {totalRooms(draft.roomAllocations)} | Total capacity: {capacity}
         </div>
         {capacity < guests && draft.roomAllocations.length > 0 && (

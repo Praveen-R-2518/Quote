@@ -12,6 +12,7 @@ import type {
   HotelSelection,
   TourPlanRow,
   Meals,
+  TourType,
 } from "@/lib/quotation-schema";
 import {
   WIZARD_STEPS,
@@ -22,6 +23,7 @@ import {
   defaultExpirationDate,
   defaultMealsForDuration,
   formatPackageDescription,
+  inclusionTextsForTourType,
 } from "@/lib/quotation-schema";
 import { saveDraft, loadDraft, clearDraft } from "@/lib/draft-storage";
 import type { AppConfig } from "@/lib/config-service";
@@ -37,6 +39,7 @@ function createEmptyDraft(): QuotationDraft {
   return {
     id: uuidv4(),
     customerName: "",
+    tourType: "BB",
     nights,
     days,
     stayingLocations: [],
@@ -86,6 +89,7 @@ interface QuotationState {
   nextStep: () => void;
   prevStep: () => void;
   setCustomerName: (name: string) => void;
+  setTourType: (tourType: TourType) => void;
   setDuration: (nights: number, days: number) => void;
   setStayingLocations: (locations: StayingLocation[]) => void;
   setPassengers: (passengers: Passengers) => void;
@@ -135,6 +139,7 @@ function normalizeLoadedDraft(stored: QuotationDraft & { tourPlaces?: string[] }
     quotationDate: stored.quotationDate || defaultQuotationDate(),
     expirationDate: stored.expirationDate || defaultExpirationDate(),
     defaultRoomCategory: stored.defaultRoomCategory ?? "DELUXE",
+    tourType: stored.tourType ?? "BB",
     tourPlan: stored.tourPlan ?? [],
   });
   return withTourPlanRegenerated(merged);
@@ -164,6 +169,25 @@ export const useQuotationStore = create<QuotationState>((set, get) => ({
 
   setCustomerName: (name) => {
     set((s) => ({ draft: { ...s.draft, customerName: name, updatedAt: new Date().toISOString() } }));
+  },
+
+  setTourType: (tourType) => {
+    const { config, draft } = get();
+    const templateTexts = new Set(config?.inclusionTemplates.map((t) => t.text) ?? []);
+    const customInclusions = draft.inclusions.filter((text) => !templateTexts.has(text));
+    const templateInclusions =
+      config != null
+        ? inclusionTextsForTourType(tourType, config.inclusionTemplates)
+        : draft.inclusions;
+
+    set((s) => ({
+      draft: {
+        ...s.draft,
+        tourType,
+        inclusions: config != null ? [...templateInclusions, ...customInclusions] : s.draft.inclusions,
+        updatedAt: new Date().toISOString(),
+      },
+    }));
   },
 
   setDuration: (nights, days) => {
@@ -279,9 +303,14 @@ export const useQuotationStore = create<QuotationState>((set, get) => ({
   },
 
   applyDefaultInclusionsExclusions: () => {
-    const { config } = get();
+    const { config, draft } = get();
     if (!config) return;
-    get().setInclusions(config.inclusionTemplates.filter((t) => t.isDefault).map((t) => t.text));
+    const templateTexts = new Set(config.inclusionTemplates.map((t) => t.text));
+    const customInclusions = draft.inclusions.filter((text) => !templateTexts.has(text));
+    get().setInclusions([
+      ...inclusionTextsForTourType(draft.tourType, config.inclusionTemplates),
+      ...customInclusions,
+    ]);
     get().setExclusions(config.exclusionTemplates.filter((t) => t.isDefault).map((t) => t.text));
   },
 

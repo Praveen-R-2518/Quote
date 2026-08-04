@@ -68,6 +68,19 @@ function setParagraphText(paraXml: string, text: string): string {
   });
 }
 
+/** Blank paragraph with extra vertical spacing (twips) for section gaps in the export. */
+function createSpacerParagraph(templateParaXml: string, spacingTwips = 360): string {
+  const spacing = `<w:spacing w:before="${spacingTwips}" w:after="${Math.round(spacingTwips / 3)}"/>`;
+  const withoutRuns = templateParaXml.replace(/<w:r[\s\S]*?<\/w:r>/g, "");
+  if (withoutRuns.includes("<w:pPr>")) {
+    return withoutRuns.replace(/<w:pPr>([\s\S]*?)<\/w:pPr>/, (_m, inner: string) => {
+      const cleaned = inner.replace(/<w:spacing[^/]*\/>/g, "");
+      return `<w:pPr>${cleaned}${spacing}</w:pPr>`;
+    });
+  }
+  return withoutRuns.replace(/<w:p([^>]*)>/, `<w:p$1><w:pPr>${spacing}</w:pPr>`);
+}
+
 /** Sample duration "3N 4D" split across w:t indices 12–15 and 18–21. */
 function fillDuration(xml: string, nights: number, days: number): string {
   let result = xml;
@@ -90,7 +103,97 @@ function fillDates(xml: string, quotationDate: string, expirationDate: string): 
   return result;
 }
 
-/** Sample tour-plan rows in the template (max 4 days — template layout limit). */
+/** Tour plan table layout in the official template (see scripts/inspect-tour-table.mjs). */
+const TOUR_PLAN_FIRST_DATA_ROW = 5;
+const TOUR_PLAN_DATA_ROW_STEP = 3;
+const TOUR_PLAN_MIDDLE_BLOCK_START = 6;
+const TOUR_PLAN_MIDDLE_BLOCK_END = 9;
+const TOUR_PLAN_LAST_BLOCK_START = 12;
+const TOUR_PLAN_TEMPLATE_DATA_ROWS = 4;
+
+type TourPlanRowData = ExportDocumentData["tourPlanRows"][number];
+
+function setRowTexts(rowXml: string, values: string[]): string {
+  let vi = 0;
+  return rowXml.replace(/<w:t([^>]*)>[^<]*<\/w:t>/g, (_match, attrs: string) => {
+    if (vi >= values.length) {
+      return `<w:t${attrs}></w:t>`;
+    }
+    const val = escapeXml(values[vi] ?? "");
+    vi++;
+    return `<w:t${attrs}>${val}</w:t>`;
+  });
+}
+
+function clearRowTexts(rowXml: string): string {
+  return rowXml.replace(/<w:t([^>]*)>[^<]*<\/w:t>/g, (_match, attrs: string) => `<w:t${attrs}></w:t>`);
+}
+
+function findTourPlanTable(xml: string): string | null {
+  const tables = xml.match(/<w:tbl>[\s\S]*?<\/w:tbl>/g);
+  if (!tables) return null;
+  return (
+    tables.find((t) => t.includes("DAY") && t.includes("FROM") && t.includes("HOTEL NAME")) ?? null
+  );
+}
+
+function splitTableParts(tableXml: string): { prefix: string; rows: string[] } {
+  const firstTr = tableXml.indexOf("<w:tr");
+  if (firstTr === -1) return { prefix: tableXml, rows: [] };
+  const prefix = tableXml.slice(0, firstTr);
+  const rowParts = tableXml.slice(firstTr).split("<w:tr").slice(1);
+  const rows = rowParts.map((r, i) =>
+    i === rowParts.length - 1 ? r.replace(/<\/w:tbl>\s*$/, "") : r
+  );
+  return { prefix, rows };
+}
+
+function joinTableRows(prefix: string, rows: string[]): string {
+  return `${prefix}${rows.map((r) => "<w:tr" + r).join("")}</w:tbl>`;
+}
+
+function expandTourPlanTableRows(rows: string[], neededDataRows: number): string[] {
+  if (neededDataRows <= TOUR_PLAN_TEMPLATE_DATA_ROWS) return [...rows];
+  const extraBlocks = neededDataRows - TOUR_PLAN_TEMPLATE_DATA_ROWS;
+  const middleBlock = rows.slice(TOUR_PLAN_MIDDLE_BLOCK_START, TOUR_PLAN_MIDDLE_BLOCK_END);
+  const before = rows.slice(0, TOUR_PLAN_LAST_BLOCK_START);
+  const lastBlock = rows.slice(TOUR_PLAN_LAST_BLOCK_START);
+  const insertions = Array.from({ length: extraBlocks }, () => [...middleBlock]).flat();
+  return [...before, ...insertions, ...lastBlock];
+}
+
+function tourPlanDataRowIndex(dayIndex: number): number {
+  return TOUR_PLAN_FIRST_DATA_ROW + dayIndex * TOUR_PLAN_DATA_ROW_STEP;
+}
+
+function valuesForTourPlanRow(row: TourPlanRowData, isLastDay: boolean): string[] {
+  if (isLastDay) {
+    return [row.dayLabel, row.from, row.to, row.hotelName];
+  }
+  return [row.dayLabel, row.from, row.to, row.hotelName, row.stayLocation, row.roomCategory];
+}
+
+function fillTourPlanTable(tableXml: string, tourPlanRows: TourPlanRowData[]): string {
+  const { prefix, rows: templateRows } = splitTableParts(tableXml);
+  let rows = expandTourPlanTableRows(templateRows, tourPlanRows.length);
+
+  for (let d = 0; d < tourPlanRows.length; d++) {
+    const idx = tourPlanDataRowIndex(d);
+    const isLast = d === tourPlanRows.length - 1;
+    rows[idx] = setRowTexts(rows[idx]!, valuesForTourPlanRow(tourPlanRows[d]!, isLast));
+  }
+
+  if (tourPlanRows.length < TOUR_PLAN_TEMPLATE_DATA_ROWS) {
+    for (let d = tourPlanRows.length; d < TOUR_PLAN_TEMPLATE_DATA_ROWS; d++) {
+      const idx = tourPlanDataRowIndex(d);
+      if (rows[idx]) rows[idx] = clearRowTexts(rows[idx]!);
+    }
+  }
+
+  return joinTableRows(prefix, rows);
+}
+
+/** Fallback when the tour plan table cannot be located in document.xml. */
 const TOUR_PLAN_ROW_STARTS = [66, 72, 78, 84] as const;
 const TOUR_PLAN_FIELD_COUNTS = [6, 6, 6, 4] as const;
 const TOUR_PLAN_FIELDS = [
@@ -100,7 +203,7 @@ const TOUR_PLAN_FIELDS = [
   ["dayLabel", "from", "to", "hotelName"],
 ] as const;
 
-function fillTourPlanRows(xml: string, rows: ExportDocumentData["tourPlanRows"]): string {
+function fillTourPlanRowsByIndex(xml: string, rows: TourPlanRowData[]): string {
   let result = xml;
   for (let r = 0; r < TOUR_PLAN_ROW_STARTS.length; r++) {
     const startIdx = TOUR_PLAN_ROW_STARTS[r];
@@ -113,6 +216,13 @@ function fillTourPlanRows(xml: string, rows: ExportDocumentData["tourPlanRows"])
     }
   }
   return result;
+}
+
+function fillTourPlanRows(xml: string, rows: TourPlanRowData[]): string {
+  const table = findTourPlanTable(xml);
+  if (!table) return fillTourPlanRowsByIndex(xml, rows);
+  const filled = fillTourPlanTable(table, rows);
+  return xml.replace(table, filled);
 }
 
 /**
@@ -141,6 +251,12 @@ function fillInclusionsAndExclusions(
 
   if (!listTemplate) return fillInclusionsByIndex(xml, inclusions);
 
+  const emptyParagraphTemplate =
+    sectionParagraphs.find((p) => !p.xml.includes("<w:t"))?.xml ??
+    sectionParagraphs[sectionParagraphs.length - 1]?.xml ??
+    listTemplate.xml;
+  const sectionSpacer = () => createSpacerParagraph(emptyParagraphTemplate);
+
   let result = xml;
 
   for (let i = 0; i < listParagraphs.length; i++) {
@@ -161,6 +277,7 @@ function fillInclusionsAndExclusions(
 
   const exclusionItems = exclusions.map((item) => item.trim()).filter(Boolean);
   if (exclusionItems.length > 0) {
+    insertBlock += sectionSpacer();
     insertBlock += setParagraphText(paragraphs[headingIdx].xml, "Exclusions:");
     insertBlock += exclusionItems
       .map((item) => setParagraphText(listTemplate.xml, item))
@@ -168,10 +285,16 @@ function fillInclusionsAndExclusions(
   }
 
   if (insertBlock) {
+    insertBlock += sectionSpacer();
     const footerPara = paragraphs[footerIdx].xml;
     const insertAt = result.indexOf(footerPara);
     if (insertAt !== -1) {
       result = result.slice(0, insertAt) + insertBlock + result.slice(insertAt);
+    }
+  } else {
+    const emptyBeforeFooter = [...sectionParagraphs].reverse().find((p) => !p.xml.includes("<w:t"));
+    if (emptyBeforeFooter) {
+      result = result.replace(emptyBeforeFooter.xml, sectionSpacer());
     }
   }
 
@@ -266,7 +389,7 @@ export async function fillQuotationTemplate(data: ExportDocumentData): Promise<B
 
   xml = fillDuration(xml, data.nights, data.days);
   xml = fillDates(xml, data.quotationDate, data.expirationDate);
-  xml = fillTourPlanRows(xml, data.tourPlanRows.slice(0, 4));
+  xml = fillTourPlanRows(xml, data.tourPlanRows);
   xml = fillInclusionsAndExclusions(xml, data.inclusions, data.exclusions);
   xml = fillSummaryTable(xml, data);
 

@@ -13,10 +13,13 @@ import {
   payingPassengers,
   totalPassengers,
   travellersNeedingTransport,
+  TOUR_TYPES,
+  TOUR_TYPE_LABELS,
+  type TourType,
 } from "@/lib/quotation-schema";
 
 export function TripBasicsStep() {
-  const { draft, config, setCustomerName, setDuration, setPassengers, setPricing } = useQuotationStore();
+  const { draft, config, setCustomerName, setTourType, setDuration, setPassengers, setPricing } = useQuotationStore();
   const requireCustomerName = config?.template?.requireCustomerName ?? false;
   const mismatch = durationMismatch(draft.nights, draft.days);
   const p = draft.passengers;
@@ -43,6 +46,24 @@ export function TripBasicsStep() {
               placeholder="Enter customer or group name"
               required={requireCustomerName}
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="tourType">Tour type</Label>
+            <Select
+              id="tourType"
+              value={draft.tourType}
+              onChange={(e) => setTourType(e.target.value as TourType)}
+            >
+              {TOUR_TYPES.map((type) => (
+                <option key={type} value={type}>
+                  {type} — {TOUR_TYPE_LABELS[type]}
+                </option>
+              ))}
+            </Select>
+            <p className="text-xs text-stone-500">
+              Full Board (FB) automatically includes all standard and optional inclusions in the quotation.
+            </p>
           </div>
 
           <div className="grid grid-cols-2 gap-4">

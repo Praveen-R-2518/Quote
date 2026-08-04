@@ -50,9 +50,19 @@ export const mealsSchema = z.object({
   dinners: z.number().int().min(0).default(0),
 });
 
+export const TOUR_TYPES = ["BB", "HB", "FB"] as const;
+export type TourType = (typeof TOUR_TYPES)[number];
+
+export const TOUR_TYPE_LABELS: Record<TourType, string> = {
+  BB: "Bed & Breakfast only",
+  HB: "Half Board",
+  FB: "Full Board",
+};
+
 export const quotationDraftSchema = z.object({
   id: z.string(),
   customerName: z.string(),
+  tourType: z.enum(TOUR_TYPES).default("BB"),
   nights: z.number().int().min(1),
   days: z.number().int().min(1),
   stayingLocations: z.array(stayingLocationSchema),
@@ -116,6 +126,21 @@ export function travellersNeedingTransport(p: Passengers): number {
 /** e.g. 10 → "10pax" for quotation summary tables */
 export function formatPaxQty(count: number): string {
   return `${count}pax`;
+}
+
+/** Inclusion template rows from admin config */
+export type InclusionTemplateRow = { text: string; isDefault: boolean; sortOrder?: number };
+
+/** FB includes every template; HB and BB only include default (non-optional) items. */
+export function inclusionTextsForTourType(
+  tourType: TourType,
+  templates: InclusionTemplateRow[]
+): string[] {
+  const sorted = [...templates].sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+  if (tourType === "FB") {
+    return sorted.map((t) => t.text);
+  }
+  return sorted.filter((t) => t.isDefault).map((t) => t.text);
 }
 
 export function durationMismatch(nights: number, days: number): boolean {

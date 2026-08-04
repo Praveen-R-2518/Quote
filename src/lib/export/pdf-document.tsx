@@ -69,7 +69,7 @@ function TourPlanTable({ rows }: { rows: ExportDocumentData["tourPlanRows"] }) {
           <Text style={styles.tableCell}>STAY LOCATION</Text>
           <Text style={styles.tableCell}>ROOM CATEGORY</Text>
         </View>
-        {rows.slice(0, 4).map((row, i) => (
+        {rows.map((row, i) => (
           <View key={i} style={styles.tableRow}>
             <Text style={styles.tableCell}>{row.dayLabel}</Text>
             <Text style={styles.tableCell}>{row.from}</Text>

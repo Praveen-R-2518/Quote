@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { TOUR_TYPE_LABELS } from "@/lib/quotation-schema";
 
 export function InclusionsExclusionsPanel() {
   const { draft, config, setInclusions, setExclusions, applyDefaultInclusionsExclusions } = useQuotationStore();
@@ -18,7 +19,7 @@ export function InclusionsExclusionsPanel() {
     if (draft.inclusions.length === 0 && draft.exclusions.length === 0 && config) {
       applyDefaultInclusionsExclusions();
     }
-  }, [config]);
+  }, [config, draft.inclusions.length, draft.exclusions.length, applyDefaultInclusionsExclusions]);
 
   const toggleInclusion = (text: string) => {
     setInclusions(
@@ -56,6 +57,11 @@ export function InclusionsExclusionsPanel() {
         <CardHeader>
           <CardTitle>Inclusions</CardTitle>
           <Button type="button" variant="outline" size="sm" onClick={applyDefaultInclusionsExclusions}>Reset Defaults</Button>
+          {draft.tourType === "FB" && (
+            <p className="text-xs text-stone-500">
+              Full Board — all template inclusions are included ({TOUR_TYPE_LABELS.FB}).
+            </p>
+          )}
         </CardHeader>
         <CardContent className="space-y-3">
           {config?.inclusionTemplates.map((t) => (

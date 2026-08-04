@@ -142,7 +142,7 @@ function normalizeLoadedDraft(stored: QuotationDraft & { tourPlaces?: string[] }
 
 export const useQuotationStore = create<QuotationState>((set, get) => ({
   draft: createEmptyDraft(),
-  currentStep: "customer",
+  currentStep: "tripBasics",
   config: null,
 
   setConfig: (config) => set({ config }),
@@ -296,7 +296,7 @@ export const useQuotationStore = create<QuotationState>((set, get) => ({
 
   resetDraft: () => {
     clearDraft();
-    set({ draft: createEmptyDraft(), currentStep: "customer" });
+    set({ draft: createEmptyDraft(), currentStep: "tripBasics" });
   },
 
   updateDraft: (partial) => {

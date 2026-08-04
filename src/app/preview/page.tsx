@@ -5,16 +5,17 @@ import { useQuotationStore } from "@/store/quotation-store";
 import { QuotationPreview } from "@/components/preview/quotation-preview";
 import type { AppConfig } from "@/lib/config-service";
 import Link from "next/link";
+import { AppHeader } from "@/components/layout/app-header";
 
 export default function PreviewPage() {
-  const { setConfig, loadFromStorage } = useQuotationStore();
+  const { setConfig, loadFromStorage, config } = useQuotationStore();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     loadFromStorage();
     fetch("/api/config")
       .then((r) => r.json())
-      .then((config: AppConfig) => { setConfig(config); setLoading(false); })
+      .then((configData: AppConfig) => { setConfig(configData); setLoading(false); })
       .catch(() => setLoading(false));
   }, [setConfig, loadFromStorage]);
 
@@ -22,12 +23,14 @@ export default function PreviewPage() {
 
   return (
     <div className="app-background min-h-screen px-4 py-4 sm:px-6">
-      <header className="mx-auto max-w-5xl">
-        <div className="flex items-center justify-between rounded-2xl border border-orange-100 bg-white/85 px-4 py-3 shadow-sm">
-          <h1 className="text-base font-semibold tracking-tight text-stone-900 sm:text-lg">Quotation Preview</h1>
-          <Link href="/" className="rounded-xl px-3 py-2 text-sm font-medium text-stone-600 transition hover:bg-orange-50 hover:text-orange-700">Back to Wizard</Link>
-        </div>
-      </header>
+      <AppHeader
+        companyName={config?.company?.name}
+        right={
+          <Link href="/" className="rounded-xl px-3 py-2 text-sm font-medium text-stone-600 transition hover:bg-orange-50 hover:text-orange-700">
+            Back to Builder
+          </Link>
+        }
+      />
       <div className="mx-auto max-w-5xl py-6">
         <QuotationPreview />
       </div>

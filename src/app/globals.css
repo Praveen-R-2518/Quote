@@ -2,16 +2,33 @@
 
 :root {
   --background: #fffaf5;
-  --foreground: #1f1308;
+  --foreground: #0b1220;
+
   --pumpkin: #f97316;
   --pumpkin-dark: #c2410c;
   --pumpkin-soft: #ffedd5;
+
+  --navy: #0b1220;
+  --navy-soft: #47536b;
+
+  --gold: #c9a15a;
+  --gold-soft: #e8d5ad;
+
+  --cream: #fffbf4;
+  --cream-deep: #fff3e2;
+
   --card-glass: rgba(255, 255, 255, 0.9);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-navy: var(--navy);
+  --color-navy-soft: var(--navy-soft);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-cream: var(--cream);
+  --color-cream-deep: var(--cream-deep);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -46,4 +63,152 @@ body {
   margin-top: 0.15rem;
   color: #1c1917;
   font-weight: 500;
+}
+
+/* ---------------------------------------------------------------- */
+/* Landing page — premium surface, gradients, and micro-motion       */
+/* ---------------------------------------------------------------- */
+
+.landing-surface {
+  background:
+    radial-gradient(1200px 600px at 82% -10%, rgba(249, 115, 22, 0.10), transparent 60%),
+    radial-gradient(900px 500px at 8% 0%, rgba(201, 161, 90, 0.14), transparent 55%),
+    linear-gradient(180deg, #fffdf9 0%, #fffaf3 55%, #fff6ea 100%);
+}
+
+.text-gradient-brand {
+  background-image: linear-gradient(100deg, var(--pumpkin) 0%, var(--gold) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.dot-grid {
+  background-image: radial-gradient(circle, rgba(11, 18, 32, 0.14) 1px, transparent 1.4px);
+  background-size: 20px 20px;
+}
+
+.noise-fade {
+  mask-image: radial-gradient(closest-side, black 55%, transparent 100%);
+  -webkit-mask-image: radial-gradient(closest-side, black 55%, transparent 100%);
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(var(--tilt, 0deg)); }
+  50% { transform: translate3d(0, -10px, 0) rotate(var(--tilt, 0deg)); }
+}
+
+@keyframes float-slower {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(var(--tilt, 0deg)); }
+  50% { transform: translate3d(0, -16px, 0) rotate(var(--tilt, 0deg)); }
+}
+
+@keyframes blob-drift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(12px, -18px) scale(1.05); }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes dash-draw {
+  from { stroke-dashoffset: 240; }
+  to { stroke-dashoffset: 0; }
+}
+
+.animate-float-slow {
+  animation: float-slow 6s ease-in-out infinite;
+}
+
+.animate-float-slower {
+  animation: float-slower 8s ease-in-out infinite;
+}
+
+.animate-blob-drift {
+  animation: blob-drift 12s ease-in-out infinite;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-dash-draw {
+  animation: dash-draw 2.4s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float-slow,
+  .animate-float-slower,
+  .animate-blob-drift,
+  .animate-fade-in-up,
+  .animate-dash-draw {
+    animation: none !important;
+  }
+}
+
+/* ---------------------------------------------------------------- */
+/* Admin panel — enterprise surface, elevation & motion tokens       */
+/* ---------------------------------------------------------------- */
+
+.admin-surface {
+  background: #faf9f7;
+}
+
+.elevation-1 {
+  box-shadow: 0 1px 2px rgba(11, 18, 32, 0.05);
+}
+
+.elevation-2 {
+  box-shadow: 0 1px 2px rgba(11, 18, 32, 0.04), 0 4px 10px -2px rgba(11, 18, 32, 0.06);
+}
+
+.elevation-3 {
+  box-shadow: 0 4px 12px -2px rgba(11, 18, 32, 0.08), 0 16px 28px -10px rgba(11, 18, 32, 0.12);
+}
+
+@keyframes admin-fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes admin-scale-in {
+  from { opacity: 0; transform: scale(0.97) translateY(6px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes admin-toast-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-admin-fade-in {
+  animation: admin-fade-in 0.18s ease-out both;
+}
+
+.animate-admin-scale-in {
+  animation: admin-scale-in 0.16s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-admin-toast-in {
+  animation: admin-toast-in 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-skeleton {
+  animation: skeleton-pulse 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-admin-fade-in,
+  .animate-admin-scale-in,
+  .animate-admin-toast-in,
+  .animate-skeleton {
+    animation: none !important;
+  }
 }

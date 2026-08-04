@@ -6,8 +6,8 @@ const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Sri Lanka Travel Quotation Generator",
-  description: "Internal travel quotation generator for Sri Lanka tours",
+  title: "Quotation Builder | Pumpkin Tours & Travels",
+  description: "Internal quotation builder for Pumpkin Tours & Travels",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

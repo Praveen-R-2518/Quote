@@ -24,6 +24,7 @@ async function seed() {
     address: "NO.03 Glencloch, Katukitula.",
     phone: "+94764292094",
     email: "info@pumpkintours.com",
+    logoPath: "/brand/pumpkin-logo.png",
     termsAndConditions: "Rates are subject to availability. Quotation valid for 30 days from issue date.",
   });
 

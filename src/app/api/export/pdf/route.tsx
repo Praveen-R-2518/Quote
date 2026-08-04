@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { renderToBuffer } from "@react-pdf/renderer";
-import { QuotationPdfDocument } from "@/lib/export/pdf-document";
+import { fillQuotationTemplate } from "@/lib/export/template-filler";
 import { buildExportDocumentData } from "@/lib/export/build-doc-data";
-import { resolveBrandLogoPath } from "@/lib/export/resolve-brand-logo";
+import { convertDocxBufferToPdf, PdfConversionError } from "@/lib/export/docx-to-pdf";
 import { getFullConfig } from "@/lib/config-service";
 import type { QuotationDraft } from "@/lib/quotation-schema";
 
@@ -11,8 +10,8 @@ export async function POST(request: NextRequest) {
     const { draft } = await request.json() as { draft: QuotationDraft };
     const config = await getFullConfig();
     const data = buildExportDocumentData(draft, config);
-    const logoPath = resolveBrandLogoPath(config.company?.logoPath);
-    const buffer = await renderToBuffer(<QuotationPdfDocument data={data} logoPath={logoPath} />);
+    const docxBuffer = await fillQuotationTemplate(data);
+    const buffer = await convertDocxBufferToPdf(docxBuffer);
     return new NextResponse(new Uint8Array(buffer), {
       headers: {
         "Content-Type": "application/pdf",
@@ -21,6 +20,9 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("PDF export error:", error);
+    if (error instanceof PdfConversionError) {
+      return NextResponse.json({ error: error.message }, { status: 503 });
+    }
     return NextResponse.json({ error: "PDF export failed" }, { status: 500 });
   }
 }

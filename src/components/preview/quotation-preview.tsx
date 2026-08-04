@@ -29,7 +29,10 @@ export function QuotationPreview() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ draft }),
       });
-      if (!res.ok) throw new Error("Export failed");
+      if (!res.ok) {
+        const body = await res.json().catch(() => null) as { error?: string } | null;
+        throw new Error(body?.error ?? "Export failed");
+      }
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -37,8 +40,8 @@ export function QuotationPreview() {
       a.download = `quotation-${draft.customerName || "draft"}.${type === "pdf" ? "pdf" : "docx"}`;
       a.click();
       URL.revokeObjectURL(url);
-    } catch {
-      alert(`${type === "pdf" ? "PDF" : "Word"} export failed. Please try again.`);
+    } catch (error) {
+      alert(error instanceof Error ? error.message : `${type === "pdf" ? "PDF" : "Word"} export failed. Please try again.`);
     } finally {
       setExporting(null);
     }
@@ -49,8 +52,7 @@ export function QuotationPreview() {
       <div className="flex gap-3 rounded-2xl border border-orange-100 bg-white/80 p-4 text-sm text-stone-700 shadow-sm" role="alert">
         <Info className="mt-0.5 h-4 w-4 shrink-0" />
         <div>
-          <strong>Word export</strong> uses your official company template (logo, colours, layout).
-          <strong> PDF export</strong> mirrors the same quotation content and header branding. Add your logo image at public/brand/pumpkin-logo.png to include it in PDF exports.
+          <strong>Word export</strong> and <strong>PDF export</strong> both use the same official company template, so the PDF matches the Word document (logo, colours, and layout).
         </div>
       </div>
 

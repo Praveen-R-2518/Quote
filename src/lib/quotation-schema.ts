@@ -84,13 +84,9 @@ export type Meals = z.infer<typeof mealsSchema>;
 export type QuotationDraft = z.infer<typeof quotationDraftSchema>;
 
 export const WIZARD_STEPS = [
-  "customer",
-  "duration",
+  "tripBasics",
   "places",
-  "passengers",
-  "pricing",
-  "rooms",
-  "transport",
+  "roomsTransport",
   "hotels",
   "tourPlan",
   "inclusions",

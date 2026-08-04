@@ -1,5 +1,6 @@
 import type { QuotationDraft, TourPlanRow } from "@/lib/quotation-schema";
 import type { AppConfig } from "@/lib/config-service";
+import { DEFAULT_COMPANY_NAME } from "@/lib/brand";
 import { formatCurrency } from "@/lib/format/currency";
 import { totalPassengers, payingPassengers, formatPackageDescription } from "@/lib/quotation-schema";
 import { totalRooms, formatRoomsDescription } from "@/lib/room-allocation";
@@ -68,7 +69,7 @@ export function buildExportDocumentData(
 
   return {
     title: config.template?.quotationTitle ?? "TOUR QUOTA",
-    companyName: config.company?.name ?? "Pumpkin Tours & Travels",
+    companyName: config.company?.name ?? DEFAULT_COMPANY_NAME,
     companyAddress: config.company?.address ?? "",
     companyPhone: config.company?.phone ?? "",
     companyEmail: config.company?.email ?? "",

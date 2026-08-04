@@ -2,28 +2,21 @@
 
 import { useQuotationStore } from "@/store/quotation-store";
 import { WIZARD_STEPS } from "@/lib/quotation-schema";
+import { APP_NAME } from "@/lib/brand";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { CustomerStep } from "./customer-step";
-import { DurationStep } from "./duration-step";
+import { TripBasicsStep } from "./trip-basics-step";
 import { PlacesStep } from "./places-step";
-import { PassengersStep } from "./passengers-step";
-import { PricingStep } from "./pricing-step";
-import { RoomsStep } from "./rooms-step";
-import { TransportStep } from "./transport-step";
+import { RoomsTransportStep } from "./rooms-transport-step";
 import { HotelsStep } from "./hotels-step";
 import { TourPlanStep } from "./tour-plan-step";
 import { InclusionsStep } from "./inclusions-step";
 import { PreviewStep } from "./preview-step";
 
 const STEP_LABELS: Record<string, string> = {
-  customer: "Customer",
-  duration: "Duration",
+  tripBasics: "Trip Basics",
   places: "Places",
-  passengers: "Passengers",
-  pricing: "Pricing",
-  rooms: "Rooms",
-  transport: "Transport",
+  roomsTransport: "Rooms & Transport",
   hotels: "Hotels",
   tourPlan: "Tour Plan",
   inclusions: "Inclusions",
@@ -31,13 +24,9 @@ const STEP_LABELS: Record<string, string> = {
 };
 
 const STEP_COMPONENTS: Record<string, React.ComponentType> = {
-  customer: CustomerStep,
-  duration: DurationStep,
+  tripBasics: TripBasicsStep,
   places: PlacesStep,
-  passengers: PassengersStep,
-  pricing: PricingStep,
-  rooms: RoomsStep,
-  transport: TransportStep,
+  roomsTransport: RoomsTransportStep,
   hotels: HotelsStep,
   tourPlan: TourPlanStep,
   inclusions: InclusionsStep,
@@ -58,7 +47,7 @@ export function WizardContainer() {
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-orange-600">
-              Step {currentIndex + 1} of {WIZARD_STEPS.length}
+              {APP_NAME} · Step {currentIndex + 1} of {WIZARD_STEPS.length}
             </p>
             <h2 className="mt-1 text-2xl font-semibold tracking-tight text-stone-900">{currentLabel}</h2>
             {nextLabel && <p className="mt-1 text-sm text-stone-500">Next up: {nextLabel}</p>}

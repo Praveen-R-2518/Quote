@@ -17,41 +17,41 @@ interface HeroSectionProps {
 
 export function HeroSection({ onStartNew, draftAvailable, onContinueDraft }: HeroSectionProps) {
   return (
-    <section className="mx-auto w-full max-w-6xl px-4 pt-14 sm:px-6 sm:pt-20 lg:pt-24">
-      <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-[1.08fr_0.92fr] lg:gap-10">
+    <section className="mx-auto w-full max-w-6xl overflow-hidden px-4 pt-10 sm:px-6 sm:pt-20 lg:pt-24">
+      <div className="grid grid-cols-1 items-center gap-10 sm:gap-14 lg:grid-cols-[1.08fr_0.92fr] lg:gap-10">
         <div className="animate-fade-in-up">
-          <span className="inline-flex items-center gap-2 rounded-full border border-orange-200/70 bg-white/70 px-3.5 py-1.5 text-xs font-semibold text-orange-700 shadow-sm">
-            <Sparkles className="h-3.5 w-3.5" />
-            {HERO_EYEBROW}
+          <span className="inline-flex max-w-full items-center gap-2 rounded-full border border-orange-200/70 bg-white/70 px-3 py-1.5 text-[11px] font-semibold text-orange-700 shadow-sm sm:px-3.5 sm:text-xs">
+            <Sparkles className="h-3.5 w-3.5 shrink-0" />
+            <span className="truncate">{HERO_EYEBROW}</span>
           </span>
 
-          <h1 className="mt-6 text-[2.5rem] font-bold leading-[1.08] tracking-tight text-navy sm:text-5xl lg:text-[3.4rem]">
+          <h1 className="mt-5 text-[1.75rem] font-bold leading-[1.1] tracking-tight text-navy sm:mt-6 sm:text-5xl lg:text-[3.4rem]">
             {HERO_HEADLINE_LINE1}
             <br />
             <span className="text-gradient-brand">{HERO_HEADLINE_ACCENT}</span>
           </h1>
 
-          <p className="mt-6 max-w-lg text-[17px] leading-relaxed text-navy-soft">
+          <p className="mt-4 max-w-lg text-base leading-relaxed text-navy-soft sm:mt-6 sm:text-[17px]">
             {HERO_SUBTEXT}
           </p>
 
-          <div className="mt-9 flex flex-wrap items-center gap-4">
+          <div className="mt-7 flex w-full flex-col gap-3 sm:mt-9 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
             {draftAvailable ? (
               <>
                 <Button
                   size="lg"
-                  className="group min-w-[11.5rem] text-[15px] shadow-lg shadow-orange-500/20"
+                  className="group w-full text-[15px] shadow-lg shadow-orange-500/20 sm:w-auto sm:min-w-[11.5rem]"
                   onClick={onContinueDraft}
                 >
                   Continue draft
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                 </Button>
-                <Button size="lg" variant="outline" className="min-w-[11.5rem] text-[15px]" onClick={onStartNew}>
+                <Button size="lg" variant="outline" className="w-full text-[15px] sm:w-auto sm:min-w-[11.5rem]" onClick={onStartNew}>
                   Create New Quotation
                 </Button>
               </>
             ) : (
-              <Button size="lg" className="group min-w-[13rem] text-[15px] shadow-lg shadow-orange-500/20" onClick={onStartNew}>
+              <Button size="lg" className="group w-full text-[15px] shadow-lg shadow-orange-500/20 sm:w-auto sm:min-w-[13rem]" onClick={onStartNew}>
                 Create New Quotation
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
               </Button>

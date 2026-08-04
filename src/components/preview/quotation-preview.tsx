@@ -5,7 +5,7 @@ import { useQuotationStore } from "@/store/quotation-store";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/format/currency";
-import { payingPassengers } from "@/lib/quotation-schema";
+import { payingPassengers, formatPaxQty } from "@/lib/quotation-schema";
 import { totalRooms, formatRoomsDescription } from "@/lib/room-allocation";
 import { FileDown, FileText, RotateCcw, Info } from "lucide-react";
 
@@ -67,38 +67,38 @@ export function QuotationPreview() {
           <dl className="review-grid grid gap-3 sm:grid-cols-2">
             <div>
               <dt className="font-medium text-stone-500">Duration</dt>
-              <dd>{draft.nights}N {draft.days}D</dd>
+              <dd className="break-words">{draft.nights}N {draft.days}D</dd>
             </div>
             <div>
               <dt className="font-medium text-stone-500">Quotation date</dt>
-              <dd>{draft.quotationDate}</dd>
+              <dd className="break-words">{draft.quotationDate}</dd>
             </div>
             <div>
               <dt className="font-medium text-stone-500">Expiration date</dt>
-              <dd>{draft.expirationDate}</dd>
+              <dd className="break-words">{draft.expirationDate}</dd>
             </div>
             <div>
               <dt className="font-medium text-stone-500">Customer</dt>
-              <dd>{draft.customerName || "—"}</dd>
+              <dd className="break-words">{draft.customerName || "—"}</dd>
             </div>
             <div>
               <dt className="font-medium text-stone-500">Places</dt>
-              <dd>
+              <dd className="break-words">
                 {draft.stayingLocations.map((s) => `${s.location} (${s.nights}N)`).join(" / ") ||
                   "—"}
               </dd>
             </div>
             <div>
               <dt className="font-medium text-stone-500">PAX (paying)</dt>
-              <dd>{payingPax}</dd>
+              <dd className="break-words">{formatPaxQty(payingPax)}</dd>
             </div>
             <div>
               <dt className="font-medium text-stone-500">Rooms</dt>
-              <dd>{roomsDescription || roomsQty || "—"}</dd>
+              <dd className="break-words">{roomsDescription || roomsQty || "—"}</dd>
             </div>
             <div>
               <dt className="font-medium text-stone-500">Transportation</dt>
-              <dd>{transportDescription || "—"}</dd>
+              <dd className="break-words">{transportDescription || "—"}</dd>
             </div>
             <div>
               <dt className="font-medium text-stone-500">Meals</dt>
@@ -109,7 +109,7 @@ export function QuotationPreview() {
             </div>
             <div className="sm:col-span-2">
               <dt className="font-medium text-stone-500">Description</dt>
-              <dd>{draft.packageDescription}</dd>
+              <dd className="break-words">{draft.packageDescription}</dd>
             </div>
             <div>
               <dt className="font-medium text-stone-500">Per person</dt>

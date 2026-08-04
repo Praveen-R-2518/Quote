@@ -42,33 +42,33 @@ export function WizardContainer() {
   const nextLabel = WIZARD_STEPS[currentIndex + 1] ? STEP_LABELS[WIZARD_STEPS[currentIndex + 1]] : null;
 
   return (
-    <div className="mx-auto max-w-5xl px-0 py-6">
-      <section className="mb-5 rounded-3xl border border-orange-100 bg-white/85 p-4 shadow-sm sm:p-5">
-        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-orange-600">
+    <div className="mx-auto max-w-5xl px-0 py-4 sm:py-6">
+      <section className="mb-4 rounded-2xl border border-orange-100 bg-white/85 p-3 shadow-sm sm:mb-5 sm:rounded-3xl sm:p-5">
+        <div className="mb-3 flex flex-col gap-2 sm:mb-4 sm:flex-row sm:items-end sm:justify-between sm:gap-3">
+          <div className="min-w-0">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-600 sm:text-xs">
               {APP_NAME} · Step {currentIndex + 1} of {WIZARD_STEPS.length}
             </p>
-            <h2 className="mt-1 text-2xl font-semibold tracking-tight text-stone-900">{currentLabel}</h2>
-            {nextLabel && <p className="mt-1 text-sm text-stone-500">Next up: {nextLabel}</p>}
+            <h2 className="mt-1 text-xl font-semibold tracking-tight text-stone-900 sm:text-2xl">{currentLabel}</h2>
+            {nextLabel && <p className="mt-1 truncate text-sm text-stone-500">Next up: {nextLabel}</p>}
           </div>
-          <Button variant="ghost" size="sm" onClick={() => { if (confirm("Clear all quotation data and start again?")) resetDraft(); }}>
+          <Button variant="ghost" size="sm" className="self-start sm:self-auto" onClick={() => { if (confirm("Clear all quotation data and start again?")) resetDraft(); }}>
             Start new
           </Button>
         </div>
 
-        <div className="mb-4 h-2 overflow-hidden rounded-full bg-orange-100">
+        <div className="mb-3 h-2 overflow-hidden rounded-full bg-orange-100 sm:mb-4">
           <div className="h-full rounded-full bg-orange-500 transition-all" style={{ width: `${progress}%` }} />
         </div>
 
-        <nav className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1" aria-label="Quotation steps">
+        <nav className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 scroll-smooth snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" aria-label="Quotation steps">
           {WIZARD_STEPS.map((step, i) => (
             <button
               key={step}
               type="button"
               onClick={() => setStep(step)}
               className={cn(
-                "flex min-w-fit items-center gap-2 rounded-2xl border px-3 py-2 text-xs font-medium transition-all hover:-translate-y-0.5",
+                "flex min-w-fit snap-start items-center gap-2 rounded-2xl border px-3 py-2 text-xs font-medium transition-all sm:hover:-translate-y-0.5",
                 i === currentIndex
                   ? "border-orange-300 bg-orange-50 text-orange-800 shadow-sm"
                   : i < currentIndex
@@ -78,7 +78,7 @@ export function WizardContainer() {
             >
               <span
                 className={cn(
-                  "flex h-5 w-5 items-center justify-center rounded-full text-[11px]",
+                  "flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px]",
                   i === currentIndex
                     ? "bg-orange-500 text-white"
                     : i < currentIndex
@@ -88,23 +88,28 @@ export function WizardContainer() {
               >
                 {i + 1}
               </span>
-              {STEP_LABELS[step]}
+              <span className="whitespace-nowrap">{STEP_LABELS[step]}</span>
             </button>
           ))}
         </nav>
       </section>
 
-      <div className="mb-8">
+      <div className="pb-24 sm:pb-28">
         <StepComponent />
       </div>
 
-      <div className="sticky bottom-4 z-10 flex items-center justify-between rounded-2xl border border-orange-100 bg-white/90 p-3 shadow-md shadow-orange-950/5 backdrop-blur">
-        <Button variant="outline" onClick={prevStep} disabled={currentIndex === 0}>
-          Previous
-        </Button>
-        {currentStep !== "preview" && (
-          <Button onClick={nextStep}>{nextLabel ? `Next: ${nextLabel}` : "Next"}</Button>
-        )}
+      <div className="safe-bottom fixed inset-x-0 bottom-0 z-10 border-t border-orange-100 bg-white/95 px-4 py-3 shadow-[0_-4px_20px_rgba(124,45,18,0.08)] backdrop-blur sm:sticky sm:inset-x-auto sm:bottom-4 sm:mx-0 sm:rounded-2xl sm:border sm:px-3">
+        <div className="mx-auto flex max-w-5xl items-center justify-between gap-3">
+          <Button variant="outline" className="min-w-[5.5rem] flex-1 sm:flex-none" onClick={prevStep} disabled={currentIndex === 0}>
+            Previous
+          </Button>
+          {currentStep !== "preview" && (
+            <Button className="min-w-[5.5rem] flex-1 sm:flex-none" onClick={nextStep}>
+              <span className="sm:hidden">Next</span>
+              <span className="hidden sm:inline">{nextLabel ? `Next: ${nextLabel}` : "Next"}</span>
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );

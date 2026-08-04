@@ -2,7 +2,7 @@ import type { QuotationDraft, TourPlanRow } from "@/lib/quotation-schema";
 import type { AppConfig } from "@/lib/config-service";
 import { DEFAULT_COMPANY_NAME } from "@/lib/brand";
 import { formatCurrency } from "@/lib/format/currency";
-import { totalPassengers, payingPassengers, formatPackageDescription } from "@/lib/quotation-schema";
+import { totalPassengers, payingPassengers, formatPackageDescription, formatPaxQty } from "@/lib/quotation-schema";
 import { totalRooms, formatRoomsDescription } from "@/lib/room-allocation";
 
 export interface ExportDocumentData {
@@ -22,6 +22,7 @@ export interface ExportDocumentData {
   passengers: QuotationDraft["passengers"];
   totalPax: number;
   payingPax: number;
+  paxQtyLabel: string;
   guestsNeedingBeds: number;
   currencyCode: string;
   formattedPrice: string;
@@ -84,6 +85,7 @@ export function buildExportDocumentData(
     passengers: draft.passengers,
     totalPax: totalPassengers(draft.passengers),
     payingPax,
+    paxQtyLabel: formatPaxQty(payingPax),
     guestsNeedingBeds: payingPax,
     currencyCode: draft.currencyCode,
     formattedPrice: formatCurrency(draft.pricePerPerson, draft.currencyCode, currency?.locale, currency?.symbol),

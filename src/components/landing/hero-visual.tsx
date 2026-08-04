@@ -8,7 +8,7 @@ import { CheckCircle2, MapPin, Plane, TrendingUp } from "lucide-react";
 export function HeroVisual() {
   return (
     <div
-      className="relative mx-auto aspect-[4/5] w-full max-w-md select-none sm:max-w-lg"
+      className="relative mx-auto aspect-[4/5] w-full max-w-md select-none overflow-hidden sm:max-w-lg"
       aria-hidden="true"
     >
       {/* Gradient blobs */}

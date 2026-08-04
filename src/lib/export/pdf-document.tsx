@@ -44,7 +44,7 @@ function SummaryTable({ data }: { data: ExportDocumentData }) {
         <Text style={styles.tableCell}>TOTAL ({data.currencyCode})</Text>
       </View>
       <View style={styles.tableRow}>
-        <Text style={styles.tableCell}>{String(data.roomsQty)}</Text>
+        <Text style={styles.tableCell}>{data.paxQtyLabel}</Text>
         <Text style={styles.tableCellWide}>{data.transportDescription || "—"}</Text>
         <Text style={styles.tableCell}>{data.roomsDescription || String(data.roomsQty)}</Text>
         <Text style={styles.tableCellWide}>{data.packageDescription || "—"}</Text>

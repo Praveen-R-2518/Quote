@@ -68,7 +68,7 @@ export function TourPlanStep() {
 
         <div className="space-y-3 rounded-[1.5rem] border border-orange-100 bg-orange-50/70 p-4">
           <Label>Meals included in package</Label>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-3">
             <div className="space-y-1">
               <Label htmlFor="breakfasts" className="text-xs text-stone-600">
                 Breakfasts
@@ -121,9 +121,9 @@ export function TourPlanStep() {
           />
         </div>
 
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <Label>Tour Plan ({draft.nights}N {draft.days}D)</Label>
-          <Button type="button" variant="outline" size="sm" onClick={regenerateTourPlan}>
+          <Button type="button" variant="outline" size="sm" className="self-start sm:self-auto" onClick={regenerateTourPlan}>
             Auto-fill from hotels
           </Button>
         </div>

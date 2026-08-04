@@ -47,6 +47,7 @@ export function AdminShell({ onUnauthorized, onLogout }: AdminShellProps) {
         onToggleCollapsed={toggleCollapsed}
         mobileOpen={mobileOpen}
         onCloseMobile={() => setMobileOpen(false)}
+        onLogout={onLogout}
       />
 
       <div className="admin-surface flex min-h-screen flex-1 flex-col">

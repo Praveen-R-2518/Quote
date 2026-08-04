@@ -64,9 +64,9 @@ export function InclusionsExclusionsPanel() {
               <span className="text-sm">{t.text}</span>
             </label>
           ))}
-          <div className="flex gap-2 pt-2">
+          <div className="flex flex-col gap-2 pt-2 sm:flex-row">
             <Input value={newInclusion} onChange={(e) => setNewInclusion(e.target.value)} placeholder="Custom inclusion" />
-            <Button type="button" onClick={addCustomInclusion}>Add</Button>
+            <Button type="button" className="shrink-0" onClick={addCustomInclusion}>Add</Button>
           </div>
           {draft.inclusions.filter((i) => !config?.inclusionTemplates.some((t) => t.text === i)).map((item, i) => (
             <div key={i} className="text-sm font-medium text-orange-700">+ {item}</div>
@@ -82,9 +82,9 @@ export function InclusionsExclusionsPanel() {
               <span className="text-sm">{t.text}</span>
             </label>
           ))}
-          <div className="flex gap-2 pt-2">
+          <div className="flex flex-col gap-2 pt-2 sm:flex-row">
             <Input value={newExclusion} onChange={(e) => setNewExclusion(e.target.value)} placeholder="Custom exclusion" />
-            <Button type="button" onClick={addCustomExclusion}>Add</Button>
+            <Button type="button" className="shrink-0" onClick={addCustomExclusion}>Add</Button>
           </div>
         </CardContent>
       </Card>

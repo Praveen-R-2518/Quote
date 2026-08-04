@@ -48,14 +48,14 @@ export function TransportPanel() {
         <p className="text-sm text-stone-500">Total passengers: {total}</p>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="flex gap-2">
-          <Button type="button" variant="outline" onClick={applyTransportSuggestion}>Apply Suggestion</Button>
-          <Button type="button" variant="outline" onClick={addVehicle}><Plus className="mr-1 h-4 w-4" />Add Vehicle</Button>
+        <div className="flex flex-wrap gap-2">
+          <Button type="button" variant="outline" className="flex-1 sm:flex-none" onClick={applyTransportSuggestion}>Apply Suggestion</Button>
+          <Button type="button" variant="outline" className="flex-1 sm:flex-none" onClick={addVehicle}><Plus className="mr-1 h-4 w-4" />Add Vehicle</Button>
         </div>
         {draft.transport.map((t, i) => (
-          <div key={i} className="flex items-center gap-3 rounded-2xl bg-orange-50/70 p-3">
+          <div key={i} className="flex flex-col gap-2 rounded-2xl bg-orange-50/70 p-3 sm:flex-row sm:items-center sm:gap-3">
             <select
-              className="flex-1 rounded-2xl border border-orange-100 bg-white/80 px-3 py-2 text-sm outline-none transition focus:border-orange-300 focus:ring-4 focus:ring-orange-200/70"
+              className="w-full flex-1 rounded-2xl border border-orange-100 bg-white/80 px-3 py-2 text-sm outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-200/70"
               value={t.vehicleId}
               onChange={(e) => updateItem(i, Number(e.target.value), t.count)}
             >
@@ -63,8 +63,8 @@ export function TransportPanel() {
                 <option key={v.id} value={v.id}>{v.name} (cap. {v.capacity})</option>
               ))}
             </select>
-            <Input type="number" min={1} className="w-20" value={t.count} onChange={(e) => updateItem(i, t.vehicleId, Number(e.target.value) || 1)} />
-            <button type="button" onClick={() => removeVehicle(i)} className="text-stone-400 hover:text-red-500"><Trash2 className="h-4 w-4" /></button>
+            <Input type="number" min={1} className="w-full sm:w-20" value={t.count} onChange={(e) => updateItem(i, t.vehicleId, Number(e.target.value) || 1)} />
+            <button type="button" onClick={() => removeVehicle(i)} className="self-end text-stone-400 hover:text-red-500 sm:self-auto"><Trash2 className="h-4 w-4" /></button>
           </div>
         ))}
         <div className="text-sm text-stone-600">Total transport capacity: {capacity}</div>

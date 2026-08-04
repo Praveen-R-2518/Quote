@@ -26,8 +26,9 @@ export default function PreviewPage() {
       <AppHeader
         companyName={config?.company?.name}
         right={
-          <Link href="/" className="rounded-xl px-3 py-2 text-sm font-medium text-stone-600 transition hover:bg-orange-50 hover:text-orange-700">
-            Back to Builder
+          <Link href="/" className="rounded-xl px-2.5 py-2 text-sm font-medium text-stone-600 transition hover:bg-orange-50 hover:text-orange-700 sm:px-3">
+            <span className="hidden sm:inline">Back to Builder</span>
+            <span className="sm:hidden">← Back</span>
           </Link>
         }
       />

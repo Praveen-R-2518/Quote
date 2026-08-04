@@ -77,7 +77,7 @@ export default function HomePage() {
     };
 
     return (
-      <div className="landing-surface min-h-screen">
+      <div className="landing-surface min-h-screen overflow-x-clip">
         <SiteHeader companyName={config?.company?.name} />
 
         <main>
@@ -94,7 +94,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="app-background min-h-screen px-4 py-4 sm:px-6">
+    <div className="app-background min-h-screen overflow-x-clip px-3 py-3 sm:px-6 sm:py-4">
       <AppHeader companyName={config?.company?.name} showAdminLink />
       <WizardContainer />
     </div>

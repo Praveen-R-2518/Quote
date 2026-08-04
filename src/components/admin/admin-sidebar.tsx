@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { ChevronsLeft, ChevronsRight } from "lucide-react";
+import { ChevronsLeft, ChevronsRight, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ADMIN_ENTITIES, ADMIN_GROUPS, type AdminEntityConfig } from "@/lib/admin/entity-config";
 import { APP_NAME, BRAND_LOGO_SRC, DEFAULT_COMPANY_NAME } from "@/lib/brand";
@@ -15,9 +15,10 @@ interface AdminSidebarProps {
   onToggleCollapsed: () => void;
   mobileOpen: boolean;
   onCloseMobile: () => void;
+  onLogout?: () => void;
 }
 
-export function AdminSidebar({ activeKey, onSelect, collapsed, onToggleCollapsed, mobileOpen, onCloseMobile }: AdminSidebarProps) {
+export function AdminSidebar({ activeKey, onSelect, collapsed, onToggleCollapsed, mobileOpen, onCloseMobile, onLogout }: AdminSidebarProps) {
   const [logoError, setLogoError] = useState(false);
   // The mobile drawer is always fully expanded regardless of the desktop
   // collapsed preference — only the persistent desktop rail collapses.
@@ -108,7 +109,30 @@ export function AdminSidebar({ activeKey, onSelect, collapsed, onToggleCollapsed
           })}
         </nav>
 
-        <div className="border-t border-stone-100 p-2.5">
+        <div className="border-t border-stone-100 p-2.5 lg:hidden">
+          <Link
+            href="/"
+            onClick={onCloseMobile}
+            className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium text-navy-soft transition-colors hover:bg-stone-50 hover:text-navy"
+          >
+            Back to Builder
+          </Link>
+          {onLogout && (
+            <button
+              type="button"
+              onClick={() => {
+                onLogout();
+                onCloseMobile();
+              }}
+              className="mt-0.5 flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium text-navy-soft transition-colors hover:bg-stone-50 hover:text-navy"
+            >
+              <LogOut className="h-4 w-4" />
+              Logout
+            </button>
+          )}
+        </div>
+
+        <div className="hidden border-t border-stone-100 p-2.5 lg:block">
           <button
             type="button"
             onClick={onToggleCollapsed}

@@ -113,7 +113,7 @@ export function DataTable({ entity, items, loading, refData, searchQuery, onEdit
           <thead className="sticky top-0 z-10 bg-stone-50">
             <tr>
               {columns.map((col) => (
-                <th key={col.key} scope="col" className="px-5 py-3 font-medium text-navy-soft">
+                <th key={col.key} scope="col" className="px-3 py-2.5 font-medium text-navy-soft sm:px-5 sm:py-3">
                   <button
                     type="button"
                     onClick={() => toggleSort(col.key)}
@@ -128,7 +128,7 @@ export function DataTable({ entity, items, loading, refData, searchQuery, onEdit
                   </button>
                 </th>
               ))}
-              <th scope="col" className="px-5 py-3 text-right text-xs font-semibold uppercase tracking-wide text-navy-soft">
+              <th scope="col" className="px-3 py-2.5 text-right text-xs font-semibold uppercase tracking-wide text-navy-soft sm:px-5 sm:py-3">
                 Actions
               </th>
             </tr>
@@ -150,7 +150,7 @@ export function DataTable({ entity, items, loading, refData, searchQuery, onEdit
                   {columns.map((col) => {
                     const { text, muted } = formatCellValue(col, item[col.key], refData);
                     return (
-                      <td key={col.key} className="px-5 py-3.5 text-navy">
+          <td key={col.key} className="px-3 py-3 text-navy sm:px-5 sm:py-3.5">
                         {col.type === "boolean" ? (
                           <Badge variant={item[col.key] ? "success" : "neutral"}>{text}</Badge>
                         ) : (
@@ -161,8 +161,8 @@ export function DataTable({ entity, items, loading, refData, searchQuery, onEdit
                       </td>
                     );
                   })}
-                  <td className="px-5 py-3.5 text-right">
-                    <div className="flex items-center justify-end gap-1 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
+                  <td className="px-3 py-3 text-right sm:px-5 sm:py-3.5">
+                    <div className="flex items-center justify-end gap-1 opacity-100 transition-opacity lg:opacity-0 lg:group-hover:opacity-100 lg:group-focus-within:opacity-100">
                       <button
                         type="button"
                         onClick={() => onEdit(item)}
@@ -189,7 +189,7 @@ export function DataTable({ entity, items, loading, refData, searchQuery, onEdit
       </div>
 
       {pageCount > 1 && (
-        <div className="flex items-center justify-between border-t border-stone-100 px-5 py-3 text-sm text-navy-soft">
+        <div className="flex flex-col gap-3 border-t border-stone-100 px-4 py-3 text-sm text-navy-soft sm:flex-row sm:items-center sm:justify-between sm:px-5">
           <span>
             Page {clampedPage + 1} of {pageCount} · {sorted.length} {sorted.length === 1 ? "item" : "items"}
           </span>

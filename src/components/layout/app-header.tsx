@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { Settings2 } from "lucide-react";
 import { APP_NAME, BRAND_LOGO_SRC, DEFAULT_COMPANY_NAME } from "@/lib/brand";
 
 interface AppHeaderProps {
@@ -43,9 +44,11 @@ export function AppHeader({ companyName, right, showAdminLink = false }: AppHead
           {showAdminLink ? (
             <Link
               href="/admin"
-              className="rounded-xl px-3 py-2 text-sm font-medium text-stone-600 transition hover:bg-orange-50 hover:text-orange-700"
+              className="rounded-xl px-2.5 py-2 text-sm font-medium text-stone-600 transition hover:bg-orange-50 hover:text-orange-700 sm:px-3"
+              aria-label="Admin panel"
             >
-              Admin
+              <span className="hidden sm:inline">Admin</span>
+              <Settings2 className="h-4 w-4 sm:hidden" aria-hidden="true" />
             </Link>
           ) : null}
         </div>

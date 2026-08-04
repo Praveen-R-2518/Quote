@@ -237,7 +237,7 @@ function fillSummaryTable(xml: string, data: ExportDocumentData): string {
   if (!summaryTable) return xml;
 
   const updated = fillSummaryRowCells(summaryTable, 5, [
-    String(data.roomsQty),
+    data.paxQtyLabel,
     data.transportDescription,
     data.roomsDescription || String(data.roomsQty),
     data.packageDescription,

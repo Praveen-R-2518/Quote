@@ -104,8 +104,11 @@ export function TripBasicsStep() {
               FOCs require transport
             </label>
           </div>
-          <div className="mt-4 rounded-2xl bg-orange-50/70 px-4 py-3 text-sm text-stone-600">
-            Paying passengers: {payingPassengers(p)} | Total travellers: {totalPassengers(p)} | Beds needed: {guestsNeedingBeds(p)} | Transport seats: {travellersNeedingTransport(p)}
+          <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 rounded-2xl bg-orange-50/70 px-4 py-3 text-sm text-stone-600 sm:flex sm:flex-wrap sm:gap-x-7 sm:gap-y-3">
+            <span>Paying: {payingPassengers(p)}</span>
+            <span>Total: {totalPassengers(p)}</span>
+            <span>Beds: {guestsNeedingBeds(p)}</span>
+            <span>Transport: {travellersNeedingTransport(p)}</span>
           </div>
         </CardContent>
       </Card>

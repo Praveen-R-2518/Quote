@@ -37,8 +37,8 @@ export function PlacesStep() {
         </p>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="grid grid-cols-3 gap-2">
-          <div className="col-span-2 space-y-1">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-2">
+          <div className="space-y-1 sm:col-span-2">
             <Label>Place</Label>
             <Select value={location} onChange={(e) => setLocation(e.target.value)}>
               <option value="">Select place...</option>
@@ -64,9 +64,9 @@ export function PlacesStep() {
           {draft.stayingLocations.map((loc, i) => (
             <li
               key={i}
-              className="flex items-center justify-between rounded-2xl bg-orange-50/70 px-4 py-3"
+              className="flex items-center justify-between gap-3 rounded-2xl bg-orange-50/70 px-4 py-3"
             >
-              <span>
+              <span className="min-w-0 flex-1 truncate">
                 {loc.location} — {loc.nights} night{loc.nights !== 1 ? "s" : ""}
               </span>
               <button

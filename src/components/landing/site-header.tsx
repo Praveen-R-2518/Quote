@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { Settings2 } from "lucide-react";
 import { APP_NAME, BRAND_LOGO_SRC, DEFAULT_COMPANY_NAME } from "@/lib/brand";
 
 interface SiteHeaderProps {
@@ -14,7 +15,7 @@ export function SiteHeader({ companyName }: SiteHeaderProps) {
   const businessName = companyName?.trim() || DEFAULT_COMPANY_NAME;
 
   return (
-    <header className="sticky top-4 z-30 mx-auto w-full max-w-6xl px-4 sm:px-6">
+    <header className="sticky top-0 z-30 mx-auto w-full max-w-6xl px-4 pt-3 sm:sticky sm:top-4 sm:px-6 sm:pt-0">
       <div className="flex items-center justify-between rounded-2xl border border-black/[0.06] bg-white/70 px-3.5 py-2.5 shadow-[0_1px_2px_rgba(11,18,32,0.04),0_12px_32px_-12px_rgba(11,18,32,0.10)] backdrop-blur-xl sm:px-4">
         <Link href="/" className="flex min-w-0 items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2 rounded-xl">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white p-1.5 shadow-[0_1px_2px_rgba(11,18,32,0.08)] ring-1 ring-black/[0.06]">
@@ -44,9 +45,11 @@ export function SiteHeader({ companyName }: SiteHeaderProps) {
           </span>
           <Link
             href="/admin"
-            className="rounded-xl px-3 py-2 text-sm font-medium text-navy-soft transition-colors hover:bg-orange-50 hover:text-orange-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-400"
+            className="rounded-xl px-2.5 py-2 text-sm font-medium text-navy-soft transition-colors hover:bg-orange-50 hover:text-orange-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 sm:px-3"
+            aria-label="Admin panel"
           >
-            Admin
+            <span className="hidden sm:inline">Admin</span>
+            <Settings2 className="h-4 w-4 sm:hidden" aria-hidden="true" />
           </Link>
         </div>
       </div>

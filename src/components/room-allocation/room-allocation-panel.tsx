@@ -46,12 +46,12 @@ export function RoomAllocationPanel() {
           {config?.roomTypes.map((rt) => {
             const alloc = draft.roomAllocations.find((a) => a.roomTypeId === rt.id);
             return (
-              <div key={rt.id} className="flex items-center gap-4">
-                <Label className="w-32">{rt.name} (cap. {rt.capacity})</Label>
+              <div key={rt.id} className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+                <Label className="min-w-0 flex-1 sm:w-32 sm:flex-none">{rt.name} (cap. {rt.capacity})</Label>
                 <Input
                   type="number"
                   min={0}
-                  className="w-24"
+                  className="w-full sm:w-24"
                   value={alloc?.count ?? 0}
                   onChange={(e) => updateCount(rt.id, Number(e.target.value) || 0)}
                 />
@@ -60,7 +60,9 @@ export function RoomAllocationPanel() {
           })}
         </div>
         <div className="text-sm text-stone-600">
-          Total rooms: {totalRooms(draft.roomAllocations)} | Total capacity: {capacity}
+          <span className="block sm:inline">Total rooms: {totalRooms(draft.roomAllocations)}</span>
+          <span className="hidden sm:inline"> | </span>
+          <span className="block sm:inline">Total capacity: {capacity}</span>
         </div>
         {capacity < guests && draft.roomAllocations.length > 0 && (
           <Alert variant="warning">Room capacity ({capacity}) is less than guests needing beds ({guests}).</Alert>

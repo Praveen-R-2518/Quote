@@ -113,6 +113,11 @@ export function travellersNeedingTransport(p: Passengers): number {
   return p.focRequiresTransport ? base + p.focs : base;
 }
 
+/** e.g. 10 → "10pax" for quotation summary tables */
+export function formatPaxQty(count: number): string {
+  return `${count}pax`;
+}
+
 export function durationMismatch(nights: number, days: number): boolean {
   return days !== nights + 1;
 }

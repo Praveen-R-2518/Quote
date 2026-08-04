@@ -5,7 +5,7 @@ import { useQuotationStore } from "@/store/quotation-store";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/format/currency";
-import { payingPassengers, formatPaxQty } from "@/lib/quotation-schema";
+import { payingPassengers, formatPaxQty, TOUR_TYPE_LABELS } from "@/lib/quotation-schema";
 import { totalRooms, formatRoomsDescription } from "@/lib/room-allocation";
 import { FileDown, FileText, RotateCcw, Info } from "lucide-react";
 
@@ -82,6 +82,12 @@ export function QuotationPreview() {
               <dd className="break-words">{draft.customerName || "—"}</dd>
             </div>
             <div>
+              <dt className="font-medium text-stone-500">Tour type</dt>
+              <dd className="break-words">
+                {draft.tourType} — {TOUR_TYPE_LABELS[draft.tourType]}
+              </dd>
+            </div>
+            <div>
               <dt className="font-medium text-stone-500">Places</dt>
               <dd className="break-words">
                 {draft.stayingLocations.map((s) => `${s.location} (${s.nights}N)`).join(" / ") ||
@@ -127,7 +133,7 @@ export function QuotationPreview() {
 
           {draft.tourPlan.length > 0 && (
             <div>
-              <p className="mb-2 font-medium">Tour plan (max 4 days in Word template)</p>
+              <p className="mb-2 font-medium">Tour plan</p>
               <div className="overflow-x-auto rounded-2xl border border-orange-100 bg-white/70">
                 <table className="min-w-full text-xs">
                   <thead className="bg-orange-100/80">
@@ -141,7 +147,7 @@ export function QuotationPreview() {
                     </tr>
                   </thead>
                   <tbody>
-                    {draft.tourPlan.slice(0, 4).map((row, i) => (
+                    {draft.tourPlan.map((row, i) => (
                       <tr key={i} className="border-t">
                         <td className="px-2 py-1">{row.dayLabel}</td>
                         <td className="px-2 py-1">{row.from}</td>
@@ -169,7 +175,7 @@ export function QuotationPreview() {
           )}
 
           {draft.exclusions.length > 0 && (
-            <div>
+            <div className="mt-6">
               <p className="font-medium">Exclusions</p>
               <ul className="ml-4 mt-1 list-disc">
                 {draft.exclusions.map((item, i) => (

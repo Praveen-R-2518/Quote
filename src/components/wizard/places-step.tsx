@@ -32,7 +32,7 @@ export function PlacesStep() {
     <Card>
       <CardHeader>
         <CardTitle>Tour Places</CardTitle>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-stone-500">
           Places included in the tour and where guests stay overnight
         </p>
       </CardHeader>
@@ -64,7 +64,7 @@ export function PlacesStep() {
           {draft.stayingLocations.map((loc, i) => (
             <li
               key={i}
-              className="flex items-center justify-between rounded-md bg-gray-50 px-3 py-2"
+              className="flex items-center justify-between rounded-2xl bg-orange-50/70 px-4 py-3"
             >
               <span>
                 {loc.location} — {loc.nights} night{loc.nights !== 1 ? "s" : ""}
@@ -72,14 +72,14 @@ export function PlacesStep() {
               <button
                 type="button"
                 onClick={() => removePlace(i)}
-                className="text-gray-400 hover:text-red-500"
+                className="text-stone-400 hover:text-red-500"
               >
                 <X className="h-4 w-4" />
               </button>
             </li>
           ))}
           {draft.stayingLocations.length === 0 && (
-            <p className="text-sm text-gray-400">No places added yet.</p>
+            <p className="text-sm text-stone-400">No places added yet.</p>
           )}
         </ul>
         {totalNights !== draft.nights && draft.stayingLocations.length > 0 && (

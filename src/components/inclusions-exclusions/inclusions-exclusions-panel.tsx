@@ -69,7 +69,7 @@ export function InclusionsExclusionsPanel() {
             <Button type="button" onClick={addCustomInclusion}>Add</Button>
           </div>
           {draft.inclusions.filter((i) => !config?.inclusionTemplates.some((t) => t.text === i)).map((item, i) => (
-            <div key={i} className="text-sm text-emerald-700">+ {item}</div>
+            <div key={i} className="text-sm font-medium text-orange-700">+ {item}</div>
           ))}
         </CardContent>
       </Card>

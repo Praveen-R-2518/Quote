@@ -9,16 +9,16 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = "default", size = "md", ...props }, ref) => {
     const variants = {
-      default: "bg-emerald-600 text-white hover:bg-emerald-700",
-      outline: "border border-gray-300 bg-white hover:bg-gray-50 text-gray-900",
-      ghost: "hover:bg-gray-100 text-gray-700",
-      destructive: "bg-red-600 text-white hover:bg-red-700",
+      default: "bg-orange-500 text-white shadow-sm hover:bg-orange-600 hover:shadow-md",
+      outline: "border border-orange-200 bg-white text-stone-800 shadow-sm hover:border-orange-300 hover:bg-orange-50",
+      ghost: "text-stone-600 hover:bg-orange-50 hover:text-orange-700",
+      destructive: "bg-red-600 text-white shadow-sm hover:bg-red-700",
     };
-    const sizes = { sm: "px-3 py-1.5 text-sm", md: "px-4 py-2", lg: "px-6 py-3 text-lg" };
+    const sizes = { sm: "px-3 py-1.5 text-sm", md: "px-4 py-2.5 text-sm", lg: "px-6 py-3 text-base" };
     return (
       <button
         ref={ref}
-        className={cn("inline-flex items-center justify-center rounded-md font-medium transition-colors disabled:opacity-50 disabled:pointer-events-none", variants[variant], sizes[size], className)}
+        className={cn("inline-flex items-center justify-center rounded-xl font-semibold transition-all active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50", variants[variant], sizes[size], className)}
         {...props}
       />
     );

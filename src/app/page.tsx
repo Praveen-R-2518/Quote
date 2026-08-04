@@ -48,32 +48,40 @@ export default function HomePage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p className="text-gray-500">Loading...</p>
+      <div className="app-background flex min-h-screen items-center justify-center">
+        <p className="rounded-full bg-white/75 px-5 py-3 text-stone-500 shadow-sm">Loading...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4">
+      <div className="app-background flex min-h-screen flex-col items-center justify-center gap-4">
         <p className="text-red-600">{error}</p>
-        <p className="text-sm text-gray-500">Run npm run db:migrate && npm run db:seed</p>
+        <p className="text-sm text-stone-500">Run npm run db:migrate && npm run db:seed</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="border-b bg-white">
-        <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-4">
-          <h1 className="text-xl font-bold text-emerald-700">Sri Lanka Travel Quotation</h1>
-          <Link href="/admin" className="text-sm text-gray-500 hover:text-emerald-600">Admin</Link>
+    <div className="app-background min-h-screen px-4 py-4 sm:px-6">
+      <header className="mx-auto max-w-5xl">
+        <div className="flex items-center justify-between rounded-2xl border border-orange-100 bg-white/85 px-4 py-3 shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange-500 text-sm font-bold text-white shadow-sm">
+              P
+            </div>
+            <div>
+              <h1 className="text-base font-semibold tracking-tight text-stone-900 sm:text-lg">Sri Lanka Travel Quotation</h1>
+              <p className="hidden text-xs text-stone-500 sm:block">Pumpkin Tours & Travels</p>
+            </div>
+          </div>
+          <Link href="/admin" className="rounded-xl px-3 py-2 text-sm font-medium text-stone-600 transition hover:bg-orange-50 hover:text-orange-700">Admin</Link>
         </div>
       </header>
       {showDraftPrompt ? (
-        <div className="mx-auto max-w-md px-4 py-16 text-center">
-          <p className="mb-4">You have an unfinished quotation draft.</p>
+        <div className="mx-auto mt-12 max-w-md rounded-3xl border border-orange-100 bg-white/90 px-6 py-8 text-center shadow-sm">
+          <p className="mb-4 font-medium text-stone-800">You have an unfinished quotation draft.</p>
           <div className="flex justify-center gap-3">
             <Button onClick={() => { loadFromStorage(); setShowDraftPrompt(false); }}>Continue draft</Button>
             <Button variant="outline" onClick={() => { clearDraft(); resetDraft(); setShowDraftPrompt(false); }}>Start new</Button>

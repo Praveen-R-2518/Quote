@@ -40,7 +40,7 @@ export function TourPlanStep() {
     <Card>
       <CardHeader>
         <CardTitle>Tour Plan & Dates</CardTitle>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-stone-500">
           Review the day-by-day itinerary, meals, and quotation dates
         </p>
       </CardHeader>
@@ -66,11 +66,11 @@ export function TourPlanStep() {
           </div>
         </div>
 
-        <div className="space-y-3 rounded-md border bg-gray-50 p-4">
+        <div className="space-y-3 rounded-[1.5rem] border border-orange-100 bg-orange-50/70 p-4">
           <Label>Meals included in package</Label>
           <div className="grid grid-cols-3 gap-3">
             <div className="space-y-1">
-              <Label htmlFor="breakfasts" className="text-xs text-gray-600">
+              <Label htmlFor="breakfasts" className="text-xs text-stone-600">
                 Breakfasts
               </Label>
               <Input
@@ -82,7 +82,7 @@ export function TourPlanStep() {
               />
             </div>
             <div className="space-y-1">
-              <Label htmlFor="lunches" className="text-xs text-gray-600">
+              <Label htmlFor="lunches" className="text-xs text-stone-600">
                 Lunches
               </Label>
               <Input
@@ -94,7 +94,7 @@ export function TourPlanStep() {
               />
             </div>
             <div className="space-y-1">
-              <Label htmlFor="dinners" className="text-xs text-gray-600">
+              <Label htmlFor="dinners" className="text-xs text-stone-600">
                 Dinners
               </Label>
               <Input
@@ -107,8 +107,8 @@ export function TourPlanStep() {
             </div>
           </div>
           <div className="space-y-1">
-            <Label className="text-xs text-gray-600">Package description (for quotation table)</Label>
-            <p className="rounded-md border bg-white px-3 py-2 text-sm">{draft.packageDescription}</p>
+            <Label className="text-xs text-stone-600">Package description (for quotation table)</Label>
+            <p className="rounded-2xl border border-orange-100 bg-white/80 px-4 py-3 text-sm shadow-sm">{draft.packageDescription}</p>
           </div>
         </div>
 
@@ -128,7 +128,7 @@ export function TourPlanStep() {
           </Button>
         </div>
 
-        <div className="overflow-x-auto rounded-md border">
+        <div className="overflow-x-auto rounded-[1.5rem] border border-orange-100 bg-white/60">
           <table className="min-w-full text-sm">
             <thead className="bg-amber-100">
               <tr>
@@ -189,7 +189,7 @@ export function TourPlanStep() {
               ))}
               {draft.tourPlan.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-4 py-6 text-center text-gray-500">
+                  <td colSpan={6} className="px-4 py-6 text-center text-stone-500">
                     No tour plan rows yet. Set duration and hotels, then click Auto-fill.
                   </td>
                 </tr>

@@ -78,7 +78,7 @@ export default function AdminPage() {
 
   if (!authenticated) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50">
+      <div className="app-background flex min-h-screen items-center justify-center px-4">
         <Card className="w-full max-w-sm">
           <CardHeader><CardTitle>Admin Login</CardTitle></CardHeader>
           <CardContent>
@@ -89,7 +89,7 @@ export default function AdminPage() {
               </div>
               {error && <p className="text-sm text-red-600">{error}</p>}
               <Button type="submit" className="w-full">Login</Button>
-              <Link href="/" className="block text-center text-sm text-gray-500">Back to App</Link>
+              <Link href="/" className="block text-center text-sm font-medium text-stone-500 hover:text-orange-700">Back to App</Link>
             </form>
           </CardContent>
         </Card>
@@ -98,20 +98,20 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="border-b bg-white">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
-          <h1 className="text-xl font-bold">Admin Panel</h1>
+    <div className="app-background min-h-screen px-4 py-4 sm:px-6">
+      <header className="mx-auto max-w-5xl">
+        <div className="flex items-center justify-between rounded-2xl border border-orange-100 bg-white/85 px-4 py-3 shadow-sm">
+          <h1 className="text-base font-semibold tracking-tight text-stone-900 sm:text-lg">Admin Panel</h1>
           <div className="flex gap-3">
-            <Link href="/" className="text-sm text-gray-500 hover:text-emerald-600">Back to App</Link>
+            <Link href="/" className="rounded-xl px-3 py-2 text-sm font-medium text-stone-600 transition hover:bg-orange-50 hover:text-orange-700">Back to App</Link>
             <Button variant="outline" size="sm" onClick={logout}>Logout</Button>
           </div>
         </div>
       </header>
-      <div className="mx-auto max-w-5xl px-4 py-8">
+      <div className="mx-auto max-w-5xl py-6">
         <div className="mb-4">
           <Label>Entity</Label>
-          <select className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2" value={entity} onChange={(e) => setEntity(e.target.value)}>
+          <select className="mt-1 h-11 w-full rounded-xl border border-orange-100 bg-white px-3.5 py-2 text-sm shadow-sm outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100" value={entity} onChange={(e) => setEntity(e.target.value)}>
             {ENTITIES.map((e) => <option key={e} value={e}>{e}</option>)}
           </select>
         </div>
@@ -150,7 +150,7 @@ export default function AdminPage() {
               <>
                 <Input placeholder="text" value={formData.text ?? ""} onChange={(e) => setFormData({ ...formData, text: e.target.value })} />
                 <Input placeholder="sortOrder" value={formData.sortOrder ?? ""} onChange={(e) => setFormData({ ...formData, sortOrder: e.target.value })} />
-                <select className="w-full rounded-md border px-3 py-2" value={formData.isDefault ?? "true"} onChange={(e) => setFormData({ ...formData, isDefault: e.target.value })}>
+                <select className="h-11 w-full rounded-xl border border-orange-100 bg-white px-3.5 py-2 text-sm shadow-sm outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100" value={formData.isDefault ?? "true"} onChange={(e) => setFormData({ ...formData, isDefault: e.target.value })}>
                   <option value="true">Default</option>
                   <option value="false">Optional</option>
                 </select>

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { QuotationPdfDocument } from "@/lib/export/pdf-document";
 import { buildExportDocumentData } from "@/lib/export/build-doc-data";
+import { resolveBrandLogoPath } from "@/lib/export/resolve-brand-logo";
 import { getFullConfig } from "@/lib/config-service";
 import type { QuotationDraft } from "@/lib/quotation-schema";
 
@@ -10,7 +11,8 @@ export async function POST(request: NextRequest) {
     const { draft } = await request.json() as { draft: QuotationDraft };
     const config = await getFullConfig();
     const data = buildExportDocumentData(draft, config);
-    const buffer = await renderToBuffer(<QuotationPdfDocument data={data} />);
+    const logoPath = resolveBrandLogoPath(config.company?.logoPath);
+    const buffer = await renderToBuffer(<QuotationPdfDocument data={data} logoPath={logoPath} />);
     return new NextResponse(new Uint8Array(buffer), {
       headers: {
         "Content-Type": "application/pdf",
